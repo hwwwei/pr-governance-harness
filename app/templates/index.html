@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PR Governance Harness</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>.budget-summary{display:grid;gap:8px;margin-bottom:8px}.budget-summary>div{display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:8px;font-size:12px}.budget-summary span{color:#8b949e}.budget-summary small{text-align:right;color:#c9d1d9}.budget-summary progress{width:100%;height:8px;accent-color:#2f81f7}@media(max-width:800px){.budget-summary>div{grid-template-columns:1fr}.budget-summary small{text-align:left}}</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><p class="eyebrow">MULTI-AGENT HARNESS · CONTROL PLANE</p><h1>PR 研发治理控制台</h1><p>风险分析、盲审、候选修复与演进 Trace</p></div>
+    <nav><a href="/docs" class="button">Swagger</a><a href="/metrics" class="button secondary">Metrics</a></nav>
+  </header>
+  <section class="cards">
+    <div><span>Runs</span><strong id="run-count">-</strong></div>
+    <div><span>Active</span><strong id="active-count">-</strong></div>
+    <div><span>Latest risk</span><strong id="latest-risk">-</strong></div>
+    <div><span>Evolution</span><strong id="evolution-version">-</strong></div>
+  </section>
+  <section class="panel">
+    <div class="panel-title"><h2>最近运行</h2><button id="refresh">刷新</button></div>
+    <table><thead><tr><th>Run</th><th>Repository</th><th>Status</th><th>Risk</th><th>Created</th></tr></thead><tbody id="runs"></tbody></table>
+  </section>
+  <section class="panel">
+    <div class="panel-title"><h2>Run Detail</h2><span id="selected-run" class="muted">选择一个 Run</span></div>
+    <div id="run-summary" class="muted">运行完成后显示 DAG、发现、补丁和 Trace。</div>
+    <div id="dag" class="dag"></div>
+    <div class="columns"><div><h3>Findings</h3><div id="findings" class="stack"></div></div><div><h3>Budget</h3><div id="budget-progress" class="budget-summary"><div><span>Model calls</span><progress id="budget-calls" max="1" value="0"></progress><small id="budget-calls-label">-</small></div><div><span>Wall-clock seconds</span><progress id="budget-seconds" max="1" value="0"></progress><small id="budget-seconds-label">-</small></div></div><pre id="budget">-</pre></div></div>
+    <div class="columns"><div><h3>Candidate patch</h3><pre id="patch">-</pre></div><div><h3>Trace timeline</h3><div id="trace" class="stack"></div></div></div>
+  </section>
+  <section class="panel">
+    <div class="panel-title"><h2>Benchmark</h2><button id="benchmark">运行 Provider Benchmark</button></div>
+    <div id="benchmark-metrics" class="metric-grid"><span class="muted">Validation / Holdout 尚未运行。</span></div>
+    <pre id="benchmark-result" class="muted"></pre>
+  </section>
+  <section class="panel">
+    <div class="panel-title"><h2>Evolution</h2><button id="refresh-evolution">刷新版本</button></div>
+    <table><thead><tr><th>Version</th><th>Status</th><th>Gate</th><th>Validation</th><th>Holdout</th></tr></thead><tbody id="evolution"></tbody></table>
+  </section>
+  <section class="panel">
+    <div class="panel-title"><h2>提交 Diff</h2><button id="load-example" class="secondary">加载测试样例</button></div>
+    <form id="run-form"><input name="repository" placeholder="acme/payment-service" required><input name="pr_number" type="number" placeholder="PR number"><textarea name="diff" placeholder="粘贴 unified diff" required></textarea><button class="button" type="submit">启动分析</button></form>
+    <pre id="form-result"></pre>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
